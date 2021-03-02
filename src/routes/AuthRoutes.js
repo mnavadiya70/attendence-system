@@ -7,6 +7,7 @@ const AuthRoutes = () => {
     return [
         <Route
             path="/"
+            key="Login"
             exact
             component={Login}
         />

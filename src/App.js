@@ -19,7 +19,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-    console.log(AuthService.getCurrentUser(), "- AuthService.getCurrentUser()");
     this.setState({ user: AuthService.getCurrentUser() });
   }
 

@@ -20,7 +20,7 @@ function CustomTable(props) {
                     <TableHead>
                         <TableRow>
                             {!_.isEmpty(props.headers) && props.headers.map((header, index) => (
-                                <TableCell padding={index === 0 ? "none" : "left"}>{header}</TableCell>
+                                <TableCell padding={index === 0 ? "none" : "left"} key={header}>{header}</TableCell>
                             ))
                             }
                         </TableRow>
@@ -30,10 +30,8 @@ function CustomTable(props) {
                             !_.isEmpty(props.data)
                                 ? props.data.map((row, index) => (
                                     <TableRow key={index}>
-                                        <TableCell scope="row" align="left" padding="none">{row.std}</TableCell>
-                                        <TableCell scope="row" align="left">{row.cls}</TableCell>
-                                        <TableCell scope="row" align="left">{row.noOfTeacher}</TableCell>
-                                        <TableCell scope="row" align="left">{row.noOfStudent}</TableCell>
+                                        <TableCell scope="row" align="left" padding="none">{row.standard}</TableCell>
+                                        <TableCell scope="row" align="left">{row.division}</TableCell>
                                     </TableRow>
                                 ))
                                 : (

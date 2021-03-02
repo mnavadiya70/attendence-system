@@ -1,12 +1,13 @@
 import React, { Component } from "react";
-import AuthContext from "../../../contexts/AuthContext";
-import Utils from "../../../helper/Utils";
 import { TextField, InputAdornment, IconButton, Button } from "@material-ui/core";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import PersonIcon from "@material-ui/icons/Person";
 import LockIcon from "@material-ui/icons/Lock";
 import Visibility from "@material-ui/icons/Visibility";
 import Alert from "@material-ui/lab/Alert";
+import _ from 'lodash';
+import AuthContext from "../../../contexts/AuthContext";
+import Utils from "../../../helper/Utils";
 import AuthService from "../../../services/AuthService";
 import Loader from "../../../loader/Loader";
 
@@ -126,13 +127,9 @@ class Login extends Component {
                 <Loader loading={this.state.isLoading} />
                 <div>
                     <div>
-                        {loginError && (
-                            <>
-                                <Alert severity="error">{loginError}</Alert>
-                                <br />
-                            </>
+                        {!_.isEmpty(loginError) && (
+                            <Alert severity="error">{loginError}</Alert>
                         )}
-
                         <div>
                             <form onSubmit={this.handleSubmit} onKeyDown={this.onKeyDownHandler}>
                                 <div>
