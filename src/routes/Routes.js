@@ -1,16 +1,23 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-
-const Home = React.lazy(() => import("../components/Home"));
+import Header from '../UI/Header/Header';
+const Classes = React.lazy(() => import("../components/Classes"));
 
 const AuthRoutes = () => {
-    return [
+    const routes = [
         <Route
             path="/"
             exact
-            component={Home}
+            component={Classes}
         />
     ];
+
+    return (
+        <>
+            <Header />
+            {routes}
+        </>
+    )
 }
 
 export default AuthRoutes;
