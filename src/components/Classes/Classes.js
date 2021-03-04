@@ -10,7 +10,7 @@ import {
     // Checkbox,
     // TableHead,
     Tooltip,
-    // Button
+    Button
 } from "@material-ui/core";
 // import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import Alert from "@material-ui/lab/Alert";
@@ -18,70 +18,52 @@ import Alert from "@material-ui/lab/Alert";
 import _ from 'lodash';
 import MaterialTable from 'material-table';
 import IconButton from "@material-ui/core/IconButton";
-import { FaEye, FaUserPlus, FaUser } from "react-icons/fa";
-import AddBox from '@material-ui/icons/AddBox';
-import ArrowDownward from '@material-ui/icons/ArrowDownward';
-import Check from '@material-ui/icons/Check';
-import ChevronLeft from '@material-ui/icons/ChevronLeft';
-import ChevronRight from '@material-ui/icons/ChevronRight';
-import Clear from '@material-ui/icons/Clear';
-import DeleteOutline from '@material-ui/icons/DeleteOutline';
-import Edit from '@material-ui/icons/Edit';
-import FilterList from '@material-ui/icons/FilterList';
-import FirstPage from '@material-ui/icons/FirstPage';
-import LastPage from '@material-ui/icons/LastPage';
-import Remove from '@material-ui/icons/Remove';
-import SaveAlt from '@material-ui/icons/SaveAlt';
-import Search from '@material-ui/icons/Search';
-import ViewColumn from '@material-ui/icons/ViewColumn';
+import CheckIcon from '@material-ui/icons/Check';
+import { FaEye } from "react-icons/fa";
+import tableIcons from '../../shared/index';
 import Loader from '../../loader/Loader';
 // import CustomTable from '../../UI/Table/Table';
-import CreateClass from '../../components/Classes/CreateClass'
+import AssignTeacher from './AssignTeacher';
+import AssignStudent from './AssignStudent';
+import CommonDialog from './CommonDialog';
 import ClassService from '../../services/ClassService';
+import AttendanceDialog from './AttendanceDialog';
 
 const Classes = () => {
+    
+    const [open, setOpen] = useState(false);
+    const [classCodeForAttendance, setClassCodeForAttendance] = useState();
+    const [openDialog, setOpenDialog] = useState(false);
+    const [data, setData] = useState();
+    const [errorMessage, setErrorMessage] = useState();
+    const [openAssignTeacherDialog, setOpenAssignTeacherDialog] = useState(false);
+    const [openAssignStudentDialog, setOpenAssignStudentDialog] = useState(false);
+    const [codes, setUniqueCodes] = useState();
+    const [loading, setLoading] = useState(false);
+    const [classCode, setClassCode] = useState();
+
     const headers = [
         { field: 'key', title: 'Key', hidden: true },
         { field: 'standard', title: "Standard" },
         { field: 'division', title: "Division" },
         { field: 'uniqueCode', title: "Class unique code" },
         {
-            field: '', title: '', render: (rowData) =>
-                rowData && (
-                    <IconButton onClick={() => console.log(rowData)}>
+            field: '', title: 'View Details and mark attendance', render: (row) =>
+                row && (
+                    <IconButton onClick={() => handleOpenDialog(true, row)}>
                         <FaEye />
                     </IconButton>
                 )
-        }
+        },
+        // {
+        //     field: '', title: 'Mark Attendence', render: (row) =>
+        //         row && (
+        //             <IconButton onClick={() => handleOpenAttendanceDialog(true, row)}>
+        //                 <CheckIcon />
+        //             </IconButton>
+        //         )
+        // }
     ];
-
-    const tableIcons = {
-        Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
-        Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
-        Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-        Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
-        DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-        Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
-        Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
-        Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
-        FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
-        LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
-        NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-        PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
-        ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-        Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-        SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
-        ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
-        ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
-    };
-
-    const [open, setOpen] = useState(false);
-    const [openDialog, setOpenDialog] = useState(false);
-    const [data, setData] = useState();
-    const [errorMessage, setErrorMessage] = useState();
-    const [openAssignTeacherDialog, setOpenAssignTeacherDialog] = useState(false);
-    // const [codes, setUniqueCodes] = useState();
-    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         getClasses();
@@ -89,7 +71,7 @@ const Classes = () => {
 
     const getClasses = async () => {
         let classes = [];
-        // let codes = [];
+        let codes = [];
         setLoading(true);
         await ClassService.getClasses()
             .then(res => {
@@ -105,7 +87,7 @@ const Classes = () => {
                             division: res.data[key].Division,
                             uniqueCode: res.data[key].UniqueCode
                         });
-                        // codes.push(res.data[key].UniqueCode);
+                        codes.push(res.data[key].UniqueCode);
                     })
                 }
             })
@@ -113,18 +95,18 @@ const Classes = () => {
                 setLoading(false);
             });
         setLoading(false);
-        // setUniqueCodes(codes);
+        setUniqueCodes(codes);
         setData(classes);
     }
 
-    const handleTooltipOpen = (value) => {
-        setOpen(value);
-    };
-
-    const handleOpenDialog = (value) => {
+    const handleOpenDialog = (value, row) => {
         setOpenDialog(value);
-        if (value === false)
-            getClasses();
+        setClassCode(row.uniqueCode);
+    }
+
+    const handleOpenAttendanceDialog = (value, row) => {
+        setOpen(value);
+        setClassCodeForAttendance(row.uniqueCode);
     }
 
     const handleRowAdd = (newData, resolve) => {
@@ -235,16 +217,20 @@ const Classes = () => {
                     })}
                 </Alert>
             }
-            <Tooltip
+            {/* <Tooltip
                 title="Assign teacher"
                 onClose={() => handleTooltipOpen(false)}
                 onOpen={() => handleTooltipOpen(true)}
                 open={open}
-            >
-                <IconButton onClick={() => setOpenAssignTeacherDialog(true)}>
-                    <FaUserPlus />
-                </IconButton>
-            </Tooltip>
+            > */}
+                <button onClick={() => setOpenAssignTeacherDialog(true)}>
+                    Assign Teacher
+                </button>
+                <button onClick={() => setOpenAssignStudentDialog(true)}>
+                    Assign Students
+                </button>
+            {/* </Tooltip> */}
+            <Loader loading={loading}/>
             <MaterialTable
                 data={data}
                 columns={headers}
@@ -264,8 +250,10 @@ const Classes = () => {
                             handleRowDelete(oldData, resolve)
                         }),
                 }} />
-            {/* {loading ? <Loader loading={true} /> : <CustomTable headers={headers} data={data} />} */}
-            <CreateClass open={openDialog} handleClose={handleOpenDialog} data={data} />
+            <AssignTeacher open={openAssignTeacherDialog} handleClose={() => setOpenAssignTeacherDialog(false)} codes={codes} />
+            <AssignStudent open={openAssignStudentDialog} handleClose={() => setOpenAssignStudentDialog(false)} codes={codes} />
+            <CommonDialog open={openDialog} handleClose={() => setOpenDialog(false)} classCode={classCode}/>
+            <AttendanceDialog open={open} handleClose={() => setOpen(false)} classCode={classCodeForAttendance}/>
         </>
     );
 }

@@ -101,7 +101,6 @@ class Login extends Component {
 
         AuthService.login()
             .then(response => {
-                console.log(response);
                 if (response.data) {
                     if (response.data.Username !== body.username || response.data.Password !== body.password) {
                         this.setState({ loginError: "Invalid username or password", 'isLoading': false });
@@ -110,7 +109,6 @@ class Login extends Component {
                     this.setState({ isLoading: false });
                     Utils.addDataToStorage("user", response.data.Username);
                     this.context.updateUser({ user: response.user });
-                    console.log("test");
                     this.props.history.push("/");
                 }
             })

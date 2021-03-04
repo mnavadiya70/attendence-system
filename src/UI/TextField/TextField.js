@@ -5,7 +5,7 @@ import {
 } from "@material-ui/core";
 
 function ModalTextField(props) {
-    const { label, value, required, onchange, error, name, disabled, helperText } = props;
+    const { label, value, required, onchange, error, name, disabled, type, inputProps } = props;
     return (
         <Box>
             <Box component="label" style={{textDecorationColor: "gray"}}>
@@ -18,7 +18,8 @@ function ModalTextField(props) {
                 value={value || ''}
                 disabled={disabled}
                 onChange={(event) => onchange(event)}
-                helpertext={helperText}
+                type={type}
+                inputProps={inputProps}
             />
         </Box>
     );

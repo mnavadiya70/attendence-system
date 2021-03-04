@@ -20,7 +20,7 @@ function CustomTable(props) {
                     <TableHead>
                         <TableRow>
                             {!_.isEmpty(props.headers) && props.headers.map((header, index) => (
-                                <TableCell padding={index === 0 ? "none" : "left"} key={header}>{header}</TableCell>
+                                <TableCell padding={index === 0 ? "none" : ""} align={index !== 0 ? "left" : ""} key={header}>{header}</TableCell>
                             ))
                             }
                         </TableRow>
