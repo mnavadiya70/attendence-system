@@ -39,7 +39,6 @@ class App extends Component {
         <BrowserRouter>
           <Suspense fallback={<LinearProgress />}>
             {app}
-            {/* <ToastContainer /> */}
           </Suspense>
         </BrowserRouter>
       </AuthContext.Provider>

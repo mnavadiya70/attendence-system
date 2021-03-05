@@ -221,7 +221,7 @@ function AttendanceDialog(props) {
                 </TableContainer>
             {/* // </DialogContent>
             // <DialogActions> */}
-                <Button autoFocus onClick={handleSubmit}>Save</Button>
+                <Button autoFocus onClick={handleSubmit} style={{float: "right"}}>Save</Button>
                 {/* <Button autoFocus onClick={() => props.handleClose()}>Close</Button> */}
             {/* </DialogActions>
         </Dialog > */}

@@ -132,11 +132,11 @@ function CreateClass(props) {
     return (
         <div>
             <Dialog onClose={() => props.handleClose(false)} aria-labelledby="customized-dialog-title"
-                open={props.open}>
+                open={props.open} fullWidth={true} maxWidth="lg">
                 <DialogTitle id="customized-dialog-title" onClose={() => props.handleClose(false)}>
                     Create Class
                 </DialogTitle>
-                <DialogContent style={{ maxWidth: "650px" }}>
+                <DialogContent>
                     {!_.isEmpty(errorMessage) && (
                         <p><Alert severity="error">{errorMessage}</Alert></p>
                     )}

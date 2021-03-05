@@ -37,7 +37,7 @@ function CommonDialog(props) {
         );
     }
 
-    function a11yProps(index) {
+    function tabProperty(index) {
         return {
             id: `full-width-tab-${index}`,
             'aria-controls': `full-width-tabpanel-${index}`,
@@ -52,21 +52,21 @@ function CommonDialog(props) {
         <Dialog onClose={() => props.handleClose()} aria-labelledby="customized-dialog-title"
             open={props.open}>
             <DialogTitle id="customized-dialog-title" onClose={() => props.handleClose()}>
-                {props.classCode}
+                Class - {props.classCode}
             </DialogTitle>
             <DialogContent>
-                <AppBar position="static" color="default">
+                <AppBar position="static" color="transparent">
                     <Tabs
                         value={value}
                         onChange={handleChange}
                         indicatorColor="primary"
-                        textColor="primary"
+                        textColor="transparent"
                         variant="fullWidth"
                         aria-label="full width tabs example"
                     >
-                        <Tab label="Teachers" {...a11yProps(0)} />
-                        <Tab label="Students" {...a11yProps(1)} />
-                        <Tab label="Mark Attendance" {...a11yProps(2)} />
+                        <Tab label="Teachers" {...tabProperty(0)} />
+                        <Tab label="Students" {...tabProperty(1)} />
+                        <Tab label="Mark Attendance" {...tabProperty(2)} />
                     </Tabs>
                 </AppBar>
                 <TabPanel value={value} index={0}>

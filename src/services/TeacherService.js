@@ -1,6 +1,6 @@
 import axios from '../config/axios';
 
-function assignTeacher(data){
+function createTeacher(data){
     return axios.post('/teachers.json', data);
 }
 
@@ -9,6 +9,6 @@ function getTeachers(){
 }
 
 export default {
-    assignTeacher,
+    createTeacher,
     getTeachers
 }

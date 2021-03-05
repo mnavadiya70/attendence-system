@@ -11,36 +11,30 @@ import {
     MenuItem,
 } from "@material-ui/core";
 import _ from 'lodash';
-import moment from 'moment';
 import Alert from "@material-ui/lab/Alert";
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import TextField from '../../UI/TextField/TextField';
-import StudentService from '../../services/StudentService'
+import TeacherService from '../../services/TeacherService'
 
-function AssignStudent(props) {
+function CreateTeacher(props) {
     const fields = {
         firstName: "",
         lastName: "",
-        classCode: "",
-        phone: "",
-        address: "",
-        dateOfBirth: "",
+        uniqueCode: "",
+        email: "",
         errors: {
             firstName: null,
             lastName: null,
-            classCode: null,
-            phone: null,
-            address: null,
-            dateOfBirth: null
+            email: null
         }
     }
-    const [assignStudentFields, setAssignStudentFields] = useState(fields);
+    const [assignTeacherFields, setAssignTeacherFields] = useState(fields);
     const [errorMessage, setErrorMessage] = useState("");
 
     const handleChangeField = (event) => {
         const { name, value } = event.target;
 
-        let updFields = { ...assignStudentFields, [name]: value };
+        let updFields = { ...assignTeacherFields, [name]: value };
 
         if (name in updFields.errors) {
             updFields = {
@@ -51,12 +45,12 @@ function AssignStudent(props) {
                 }
             }
         }
-        setAssignStudentFields(updFields);
+        setAssignTeacherFields(updFields);
     }
 
     const handleSubmit = (e) => {
         let error = false;
-        let updFields = { ...assignStudentFields };
+        let updFields = { ...assignTeacherFields };
         // validate data
         for (const [key, value] of Object.entries(updFields.errors)) {
             if (updFields[key] === "" || !updFields[key]) {
@@ -74,18 +68,16 @@ function AssignStudent(props) {
         }
 
         const postData = {
-            FirstName: assignStudentFields.firstName,
-            LastName: assignStudentFields.lastName,
-            FullName: assignStudentFields.firstName + " " + assignStudentFields.lastName,
-            Phone: assignStudentFields.phone,
-            Address: assignStudentFields.address,
-            DateOfBirth: assignStudentFields.dateOfBirth,
-            GRNo: Math.floor(Math.random() * 10000) + 1
+            FirstName: assignTeacherFields.firstName,
+            LastName: assignTeacherFields.lastName,
+            FullName: assignTeacherFields.firstName + " " + assignTeacherFields.lastName,
+            ClassCode: assignTeacherFields.uniqueCode,
+            Email: assignTeacherFields.email
         }
 
-        StudentService.assignStudent(assignStudentFields.classCode, postData)
+        TeacherService.createTeacher(postData)
             .then((res) => {
-                setAssignStudentFields(fields);
+                setAssignTeacherFields(fields);
                 props.handleClose();
             })
             .catch((error) => {
@@ -96,15 +88,14 @@ function AssignStudent(props) {
             });
     }
 
-    // const minDate = moment(new Date().toLocaleDateString()).add(7, "year");
     return (
         <div>
-            <Dialog onClose={() => props.handleClose()} aria-labelledby="customized-dialog-title"
+            <Dialog onClose={() => props.handleClose(false)} aria-labelledby="customized-dialog-title"
                 open={props.open}>
-                <DialogTitle id="customized-dialog-title" onClose={() => props.handleClose()}>
-                    Create Student
+                <DialogTitle id="customized-dialog-title" onClose={() => props.handleClose(false)}>
+                    Create Teacher
                 </DialogTitle>
-                <DialogContent>
+                <DialogContent style={{ maxWidth: "650px" }}>
                     {!_.isEmpty(errorMessage) && (
                         <p><Alert severity="error">{errorMessage}</Alert></p>
                     )}
@@ -112,30 +103,22 @@ function AssignStudent(props) {
                         <Grid item sm={12}>
                             <Grid container spacing={6}>
                                 <Grid item sm={6}>
-                                    <TextField name="firstName" value={assignStudentFields.firstName} onchange={handleChangeField} label="First Name" required={true} error={assignStudentFields.errors.firstName} type="text"/>
+                                    <TextField name="firstName" value={assignTeacherFields.firstName} onchange={handleChangeField} label="First Name" required={true} error={assignTeacherFields.errors.firstName} type="text" />
                                 </Grid>
                                 <Grid item sm={6}>
-                                    <TextField name="lastName" value={assignStudentFields.lastName} onchange={handleChangeField} label="Last Name" required={true} error={assignStudentFields.errors.lastName} type="text"/>
+                                    <TextField name="lastName" value={assignTeacherFields.lastName} onchange={handleChangeField} label="Last Name" required={true} error={assignTeacherFields.errors.lastName} type="text" />
                                 </Grid>
                                 <Grid item sm={6}>
-                                    <TextField name="phone" value={assignStudentFields.phone} onchange={handleChangeField} label="Phone" required={true} error={assignStudentFields.errors.phone} type="number"/>
+                                    <TextField name="email" value={assignTeacherFields.email} onchange={handleChangeField} label="Email" required={true} error={assignTeacherFields.errors.email} type="email" />
                                 </Grid>
                                 <Grid item sm={6}>
-                                    <TextField name="address" value={assignStudentFields.address} onchange={handleChangeField} label="Address" required={true} error={assignStudentFields.errors.Address} type="text"/>
-                                </Grid>
-                                <Grid item sm={6}>
-                                    <TextField name="dateOfBirth" value={assignStudentFields.dateOfBirth} onchange={handleChangeField} label="Date of Birth" required={true} error={assignStudentFields.errors.dateOfBirth} type="date" />
-                                </Grid>
-                                <Grid item sm={6}>
-                                    <InputLabel id="classCode" name="classCode">
-                                        <span aria-hidden="true" className="MuiFormLabel-asterisk Mui-error">*</span>
-                                        Class</InputLabel>
+                                    <InputLabel id="uniqueCode" name="uniqueCode">Class Code</InputLabel>
                                     <Select
-                                        labelId="Select Class"
+                                        labelId="Select Class Code"
                                         id="demo-simple-select-outlined"
-                                        name='classCode'
+                                        name='uniqueCode'
                                         disabled={_.isEmpty(props.codes)}
-                                        value={assignStudentFields.classCode || ''}
+                                        value={assignTeacherFields.uniqueCode || ''}
                                         onChange={handleChangeField}
                                         keyboardicon={<ArrowDropDownIcon />}
                                         MenuProps={{
@@ -143,8 +126,6 @@ function AssignStudent(props) {
                                             transformOrigin: { vertical: "top", horizontal: "left" },
                                             getContentAnchorEl: null
                                         }}
-                                        required={true}
-                                        error={assignStudentFields.errors.classCode || null}
                                     >
                                         {props.codes && props.codes.map((item, index) => {
                                             return (
@@ -159,11 +140,15 @@ function AssignStudent(props) {
                 </DialogContent>
                 <DialogActions>
                     <Button autoFocus onClick={handleSubmit}>Save</Button>
-                    <Button autoFocus onClick={() => props.handleClose()}>Close</Button>
+                    <Button autoFocus onClick={() => {
+                        setAssignTeacherFields(fields);
+                        props.handleClose(false);
+                    }
+                    }>Close</Button>
                 </DialogActions>
             </Dialog>
         </div>
     );
 }
 
-export default AssignStudent;
+export default CreateTeacher;

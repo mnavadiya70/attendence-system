@@ -23,19 +23,21 @@ import { FaEye } from "react-icons/fa";
 import tableIcons from '../../shared/index';
 import Loader from '../../loader/Loader';
 // import CustomTable from '../../UI/Table/Table';
-import AssignTeacher from './AssignTeacher';
+import CreateTeacher from './CreateTeacher';
 import AssignStudent from './AssignStudent';
 import CommonDialog from './CommonDialog';
+import AssignTeacher from './AssignTeacher';
 import ClassService from '../../services/ClassService';
 import AttendanceDialog from './AttendanceDialog';
 
 const Classes = () => {
-    
+
     const [open, setOpen] = useState(false);
     const [classCodeForAttendance, setClassCodeForAttendance] = useState();
     const [openDialog, setOpenDialog] = useState(false);
     const [data, setData] = useState();
     const [errorMessage, setErrorMessage] = useState();
+    const [openCreateTeacherDialog, setOpenCreateTeacherDialog] = useState(false);
     const [openAssignTeacherDialog, setOpenAssignTeacherDialog] = useState(false);
     const [openAssignStudentDialog, setOpenAssignStudentDialog] = useState(false);
     const [codes, setUniqueCodes] = useState();
@@ -48,7 +50,7 @@ const Classes = () => {
         { field: 'division', title: "Division" },
         { field: 'uniqueCode', title: "Class unique code" },
         {
-            field: '', title: 'View Details and mark attendance', render: (row) =>
+            field: '', title: 'View Details and mark attendance', sorting: false, render: (row) =>
                 row && (
                     <IconButton onClick={() => handleOpenDialog(true, row)}>
                         <FaEye />
@@ -223,14 +225,17 @@ const Classes = () => {
                 onOpen={() => handleTooltipOpen(true)}
                 open={open}
             > */}
-                <button onClick={() => setOpenAssignTeacherDialog(true)}>
-                    Assign Teacher
+            <button onClick={() => setOpenCreateTeacherDialog(true)}>
+                Create Teacher
                 </button>
-                <button onClick={() => setOpenAssignStudentDialog(true)}>
-                    Assign Students
+            <button onClick={() => setOpenAssignStudentDialog(true)}>
+                Create Students
+                </button>
+            <button onClick={() => setOpenAssignTeacherDialog(true)}>
+                Unassigned Teachers
                 </button>
             {/* </Tooltip> */}
-            <Loader loading={loading}/>
+            <Loader loading={loading} />
             <MaterialTable
                 data={data}
                 columns={headers}
@@ -250,10 +255,11 @@ const Classes = () => {
                             handleRowDelete(oldData, resolve)
                         }),
                 }} />
-            <AssignTeacher open={openAssignTeacherDialog} handleClose={() => setOpenAssignTeacherDialog(false)} codes={codes} />
+            <CreateTeacher open={openCreateTeacherDialog} handleClose={() => setOpenCreateTeacherDialog(false)} codes={codes} />
             <AssignStudent open={openAssignStudentDialog} handleClose={() => setOpenAssignStudentDialog(false)} codes={codes} />
-            <CommonDialog open={openDialog} handleClose={() => setOpenDialog(false)} classCode={classCode}/>
-            <AttendanceDialog open={open} handleClose={() => setOpen(false)} classCode={classCodeForAttendance}/>
+            <CommonDialog open={openDialog} handleClose={() => setOpenDialog(false)} classCode={classCode} />
+            <AttendanceDialog open={open} handleClose={() => setOpen(false)} classCode={classCodeForAttendance} />
+            <AssignTeacher open={openAssignTeacherDialog} handleClose={() => setOpenAssignTeacherDialog(false)} />
         </>
     );
 }

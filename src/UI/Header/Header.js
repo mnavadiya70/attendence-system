@@ -17,8 +17,8 @@ class Header extends Component {
     render() {
         return (
             <header>
-                <h1>Admin</h1>
-                <div>
+                <h3 style={{float: "left"}}>Admin</h3>
+                <div style={{float: "right"}}>
                     <Button color="primary" onClick={this.logout}>Logout</Button>
                 </div>
             </header>

@@ -55,6 +55,9 @@ function StudentsTab(props) {
                 columns={headers}
                 icons={tableIcons}
                 title=""
+                // options={{
+                //     paging: false
+                //   }}
             />
         </>
     );
